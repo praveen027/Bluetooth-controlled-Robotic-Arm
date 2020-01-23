@@ -1,0 +1,243 @@
+
+#include <Servo.h>
+
+
+Servo servog; 
+Servo servoc; 
+Servo servos;
+Servo servoe; 
+
+const int BTState = LOW;
+char state;
+  
+void shoulderforward();
+void shoulderback();
+void elbowup();
+void elbowdown();
+void gripperopen();
+void gripperclose();
+void centreright();
+void centreleft();
+
+
+
+int sa = 100;
+int ea = 180;
+int ga = 90;
+int ca = 90;
+
+int m,M;
+int s = 5; //Speed
+
+
+void setup()
+ {
+  
+  servog.attach(12); //Gripper
+  servog.write(ga);  //define servo1 start position
+  servoe.attach(11); //Elbo
+  servoe.write(ea); //define servo4 start position 
+  servos.attach(10); // Sholder
+  servos.write(sa); //define servo3 start position
+  servoc.attach(9); // Centre
+
+
+  Serial.begin(9600);
+
+//  pinMode(s1,INPUT);  servoc.write(ca); //define servo2 start position
+
+
+  Serial.begin(9600);
+}
+
+void loop()
+{
+
+   if(Serial.available() > 0)
+     {     
+      state = Serial.read();  
+      Serial.println(state); 
+     }
+     
+ if(state == 'S') // Shoulder
+ {
+  shoulderforward();  
+  servos.write(sa);  
+  Serial.println(sa);
+  delay(s);
+ }
+
+ if(state == 's') // Shoulder
+ {
+  shoulderback();
+  servos.write(sa);
+  Serial.println(sa);
+  delay(s);
+ }
+
+ if(state == 'E') //Elbow 
+ {
+  elbowup();   
+  servoe.write(ea);
+  Serial.println(ea);
+  delay(s);
+ }
+
+ if(state == 'e') // Elbow
+ {
+  elbowdown();
+ servoe.write(ea);
+ Serial.println(ea);
+ delay(s);
+ }
+
+ if(state == 'C') //Centre
+ {
+  centreleft();  
+  servoc.write(ca);
+  Serial.println(ca);
+  delay(s);
+ }
+
+ if(state == 'c')//Centre
+ {
+  centreright();
+  servoc.write(ca);
+  Serial.println(ca);
+  delay(s);
+ }
+
+ if(state == 'g') //Gripper
+ {
+  gripperclose();    
+  servog.write(ga);
+  Serial.println(ga);
+  delay(s/2);
+ }
+
+ if(state == 'G') // Gripper
+ {
+ gripperopen();
+ servog.write(ga);
+ Serial.println(ga);
+ delay(s/2 );
+ }
+
+ if(state == 'o') 
+ {
+  servos.write(sa);
+  servog.write(ga); 
+  servoc.write(ca);
+  servoe.write(ea);
+ }
+
+ else
+ {
+  servos.write(sa);
+  servog.write(ga); 
+  servoc.write(ca);
+  servoe.write(ea);
+ }
+
+  
+}
+
+void shoulderback() 
+  {
+    m=60; 
+    M=150;  
+    sa = sa-1;
+
+    if(sa<=m)
+    {
+      sa=m;
+    }
+    
+   }
+       
+void shoulderforward()
+  {
+    m=60; 
+    M=150;  
+
+    sa = sa+1;
+    if(sa >= M)
+    {
+      sa=M;
+    }
+  }
+void elbowup()
+   {
+
+    m=100; 
+    M=180;  
+
+    ea=ea+1;
+    if(ea >= M)
+    {
+      ea = M;
+    }
+    
+   }
+void elbowdown()
+   {
+
+    m=100;
+    M=180;  
+
+   ea = ea - 1;
+   if(ea <= m)
+   {
+    ea = m;    
+   }
+   }
+void gripperclose()
+   {
+    
+    m=0; 
+    M=180;  
+
+    ga = ga+1;
+    if(ga >= M)
+    {
+      ga = M;
+    }
+    }
+void gripperopen()
+   {
+    m=0; 
+    M=180;  
+
+    ga = ga - 1;
+    if(ga <= m)
+    {
+      ga = m;
+    }
+    
+   }
+void centreright()
+   {
+
+    m=0; 
+    M=180;  
+
+    ca = ca+1;
+
+    if(ca >= M)
+    {
+      ca = M;
+    }
+    
+   }
+void centreleft()
+   {
+
+    m=0; 
+    M=180;  
+
+    ca = ca-1;
+    if(ca <= m)
+    {
+      ca = m;
+    }
+   }
